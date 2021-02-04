@@ -1,33 +1,33 @@
 Parameters:
 
-    EnvironmentName:
-        Description: An environment name that will be prefixed to resource names
-        Type: String
+  EnvironmentName:
+      Description: An environment name that will be prefixed to resource names
+      Type: String
 
-    VpcCIDR: 
-        Description: Please enter the IP range (CIDR notation) for this VPC
-        Type: String
-        Default: 10.0.0.0/16
+  VpcCIDR: 
+      Description: Please enter the IP range (CIDR notation) for this VPC
+      Type: String
+      Default: 10.0.0.0/16
 
-    PublicSubnet1CIDR:
-        Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
-        Type: String
-        Default: 10.0.0.0/24
+  PublicSubnet1CIDR:
+      Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
+      Type: String
+      Default: 10.0.0.0/24
 
-    PublicSubnet2CIDR:
-        Description: Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone
-        Type: String
-        Default: 10.0.1.0/24
+  PublicSubnet2CIDR:
+      Description: Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone
+      Type: String
+      Default: 10.0.1.0/24
 
-    PrivateSubnet1CIDR:
-        Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
-        Type: String
-        Default: 10.0.2.0/24
+  PrivateSubnet1CIDR:
+      Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
+      Type: String
+      Default: 10.0.2.0/24
 
-    PrivateSubnet2CIDR:
-        Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
-        Type: String
-        Default: 10.0.3.0/24
+  PrivateSubnet2CIDR:
+      Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
+      Type: String
+      Default: 10.0.3.0/24
 
 Resources:
 
@@ -273,13 +273,15 @@ Resources:
             apt-get install apache2 -y
             systemctl start apache2.service
             cd /var/www/html
-            aws s3 cp s3://udagram-project/index.html .
+            rm -f index.html
+            aws s3 cp s3://udacity-demo-1/udacity.zip .
+            unzip -o udacity.zip
             chown -R www-data:www-data .
-        ImageId: ami-06358f49b5839867c
+        ImageId: ami-07dd19a7900a1f049
         IamInstanceProfile: !Ref ListS3BucketsInstanceProfile
         SecurityGroups:
         - Ref: WebServerSecGroup
-        InstanceType: t3.medium
+        InstanceType: t2.micro
         BlockDeviceMappings:
         - DeviceName: "/dev/sdk"
           Ebs:
@@ -344,68 +346,68 @@ Resources:
 
 Outputs: 
 
-    VPC: 
-        Description: A reference to the created VPC
-        Value: !Ref VPC
-        Export:
-          Name: !Sub ${EnvironmentName}-VPCID
+  VPC: 
+    Description: A reference to the created VPC
+    Value: !Ref VPC
+    Export:
+      Name: !Sub ${EnvironmentName}-VPCID
 
-    VPCPublicRouteTable:
-        Description: Public Routing
-        Value: !Ref PublicRouteTable
-        Export:
-          Name: !Sub ${EnvironmentName}-PUB-RT
+  VPCPublicRouteTable:
+    Description: Public Routing
+    Value: !Ref PublicRouteTable
+    Export:
+      Name: !Sub ${EnvironmentName}-PUB-RT
 
-    VPCPrivateRouteTable1:
-        Description: Private Routing AZ1
-        Value: !Ref PrivateRouteTable1
-        Export:
-          Name: !Sub ${EnvironmentName}-PRI1-RT
+  VPCPrivateRouteTable1:
+    Description: Private Routing AZ1
+    Value: !Ref PrivateRouteTable1
+    Export:
+      Name: !Sub ${EnvironmentName}-PRI1-RT
 
-    VPCPrivateRouteTable2:
-        Description: Private Routing AZ2
-        Value: !Ref PrivateRouteTable2
-        Export:
-          Name: !Sub ${EnvironmentName}-PRI2-RT
+  VPCPrivateRouteTable2:
+    Description: Private Routing AZ2
+    Value: !Ref PrivateRouteTable2
+    Export:
+      Name: !Sub ${EnvironmentName}-PRI2-RT
 
-    PublicSubnets:
-        Description: A list of the public subnets
-        Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
-        Export:
-          Name: !Sub ${EnvironmentName}-PUB-NETS
+  PublicSubnets:
+    Description: A list of the public subnets
+    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+    Export:
+      Name: !Sub ${EnvironmentName}-PUB-NETS
 
-    PrivateSubnets:
-        Description: A list of the private subnets
-        Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
-        Export:
-          Name: !Sub ${EnvironmentName}-PRIV-NETS
+  PrivateSubnets:
+    Description: A list of the private subnets
+    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+    Export:
+      Name: !Sub ${EnvironmentName}-PRIV-NETS
 
-    PublicSubnet1:
-        Description: A reference to the public subnet in the 1st Availability Zone
-        Value: !Ref PublicSubnet1
-        Export:
-          Name: !Sub ${EnvironmentName}-PUB1-SN
+  PublicSubnet1:
+    Description: A reference to the public subnet in the 1st Availability Zone
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub ${EnvironmentName}-PUB1-SN
 
-    PublicSubnet2: 
-        Description: A reference to the public subnet in the 2nd Availability Zone
-        Value: !Ref PublicSubnet2
-        Export:
-          Name: !Sub ${EnvironmentName}-PUB2-SN
+  PublicSubnet2: 
+    Description: A reference to the public subnet in the 2nd Availability Zone
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub ${EnvironmentName}-PUB2-SN
 
-    PrivateSubnet1:
-        Description: A reference to the private subnet in the 1st Availability Zone
-        Value: !Ref PrivateSubnet1
-        Export:
-          Name: !Sub ${EnvironmentName}-PRI1-SN
+  PrivateSubnet1:
+    Description: A reference to the private subnet in the 1st Availability Zone
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub ${EnvironmentName}-PRI1-SN
 
-    PrivateSubnet2: 
-        Description: A reference to the private subnet in the 2nd Availability Zone
-        Value: !Ref PrivateSubnet2
-        Export:
-          Name: !Sub ${EnvironmentName}-PRI2-SN
-    
-    LoadBalancerDNS:
-        Description: A reference to the LoadBalancer DNS
-        Value: !Join [ "", [ "http://", !GetAtt WebAppLB.DNSName ] ]
-        Export:
-          Name: !Sub "${EnvironmentName}-LB-DNS"
+  PrivateSubnet2: 
+    Description: A reference to the private subnet in the 2nd Availability Zone
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub ${EnvironmentName}-PRI2-SN
+  
+  LoadBalancerDNS:
+    Description: A reference to the LoadBalancer DNS
+    Value: !Join [ "", [ "http://", !GetAtt WebAppLB.DNSName ] ]
+    Export:
+      Name: !Sub "${EnvironmentName}-LB-DNS"
