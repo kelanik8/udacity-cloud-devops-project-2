@@ -274,8 +274,7 @@ Resources:
             systemctl start apache2.service
             cd /var/www/html
             rm index.html
-            aws s3 cp s3://udacity-demo-1/udacity.zip .
-            unzip -o udacity.zip
+            git clone https://github.com/kelanik8/udagram.git .
         ImageId: ami-07dd19a7900a1f049
         IamInstanceProfile: !Ref ListS3BucketsInstanceProfile
         SecurityGroups:
